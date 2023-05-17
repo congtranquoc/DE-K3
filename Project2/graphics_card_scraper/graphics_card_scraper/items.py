@@ -6,7 +6,7 @@
 import scrapy
 
 
-class GraphicsCardItem(scrapy.Item):
+class GraphicsCardScraperItem(scrapy.Item):
     item_id = scrapy.Field()
     title = scrapy.Field()
     branding = scrapy.Field()
@@ -15,8 +15,8 @@ class GraphicsCardItem(scrapy.Item):
     price = scrapy.Field()
     shipping = scrapy.Field()
     image_url = scrapy.Field()
-#     max_resolution = scrapy.Field()
-#     displayport = scrapy.Field()
-#     hdmi = scrapy.Field()
-#     directx = scrapy.Field()
-#     model = scrapy.Field()
+    max_resolution = scrapy.Field()
+    displayport = scrapy.Field()
+    hdmi = scrapy.Field()
+    directx = scrapy.Field()
+    model = scrapy.Field()

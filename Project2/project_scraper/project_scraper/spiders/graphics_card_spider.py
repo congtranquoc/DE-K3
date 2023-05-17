@@ -23,27 +23,27 @@ class GraphicsCardSpider(scrapy.Spider):
                 'ImageURL': product.css('.item-cell .item-img img::attr(src)').get(),
             }
 
-            details_url = product.css('.item-title a::attr(href)').get()
-            yield response.follow(details_url, callback=self.parse_details, meta={'item': item})
+#             details_url = product.css('.item-title a::attr(href)').get()
+#             yield response.follow(details_url, callback=self.parse_details, meta={'item': item})
 
-    def parse_details(self, response):
-        item = response.meta['item']
-        specifications = response.css('.item-specifications .list-group .list-group-item')
+#     def parse_details(self, response):
+#         item = response.meta['item']
+#         specifications = response.css('.item-specifications .list-group .list-group-item')
 
-        for spec in specifications:
-            key = spec.css('.specification-key::text').get()
-            value = spec.css('.specification-value::text').get()
+#         for spec in specifications:
+#             key = spec.css('.specification-key::text').get()
+#             value = spec.css('.specification-value::text').get()
 
-            if key == 'Max Resolution':
-                item['MaxResolution'] = value
-            elif key == 'DisplayPort':
-                item['DisplayPort'] = value
-            elif key == 'HDMI':
-                item['HDMI'] = value
-            elif key == 'DirectX':
-                item['DirectX'] = value
-            elif key == 'Model':
-                item['Model'] = value
+#             if key == 'Max Resolution':
+#                 item['MaxResolution'] = value
+#             elif key == 'DisplayPort':
+#                 item['DisplayPort'] = value
+#             elif key == 'HDMI':
+#                 item['HDMI'] = value
+#             elif key == 'DirectX':
+#                 item['DirectX'] = value
+#             elif key == 'Model':
+#                 item['Model'] = value
 
-        yield item
+#         yield item
 
