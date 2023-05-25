@@ -1,13 +1,26 @@
 import scrapy
 import re
 import time
+from scrapy_splash import SplashRequest
+from scrapy import signals
+from scrapy.utils.request import request_fingerprint
+
+
 
 class NeweggGraphicsCardSpiderSpider(scrapy.Spider):
     name = "newegg_graphics_card_spider"
     allowed_domains = ["www.newegg.com"]
     start_urls = ["https://www.newegg.com/GPUs-Video-Graphics-Cards/SubCategory/ID-48/Page-{page}?Tid=7709".format(page=i) for i in range(1, 101)]
-    page_limit = 10  # Số trang tối đa để sleep
-    sleep_duration = 600  # Thời gian sleep (giây)
+    splash_url = 'http://localhost:8050'
+    
+    def start_requests(self):
+        for url in self.start_urls:
+            yield SplashRequest(
+                url,
+                self.parse, 
+                endpoint='render.html', 
+                args={'wait': 10})
+                
     def parse(self, response):
         products = response.css('.item-cell')
 
@@ -18,7 +31,7 @@ class NeweggGraphicsCardSpiderSpider(scrapy.Spider):
                 rating_count = int(rating_count.strip('()'))
                 
             rating_num = product.xpath('.//a[contains(@class, "item-rating")]/@title').get()
-            # print(rating_num)
+            print(rating_num)
             if rating_num:
                 rating = re.search(r"(\d+(\.\d+)?)", rating_num).group(1) if rating_num else None
             else:
@@ -41,11 +54,6 @@ class NeweggGraphicsCardSpiderSpider(scrapy.Spider):
 
             details_url = product.css('.item-container a::attr(href)').get()
             yield response.follow(details_url, callback=self.parse_details, meta={'item': item})
-        page = int(response.url.split('/')[-1].split('Page-')[-1].split('?')[0])
-        print(f"Page {page} done.")
-        if page % self.page_limit == 0:
-            print("Sleeping...")
-            time.sleep(self.sleep_duration)
     def parse_details(self, response):
         item = response.meta['item']
         product_details = response.css('#product-details')

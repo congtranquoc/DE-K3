@@ -7,7 +7,7 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = "graphics_card_scraper"
+BOT_NAME = "newegg_graphics_card_spider"
 
 SPIDER_MODULES = ["graphics_card_scraper.spiders"]
 NEWSPIDER_MODULE = "graphics_card_scraper.spiders"
@@ -17,7 +17,7 @@ NEWSPIDER_MODULE = "graphics_card_scraper.spiders"
 #USER_AGENT = "graphics_card_scraper (+http://www.yourdomain.com)"
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
@@ -47,25 +47,29 @@ ROBOTSTXT_OBEY = True
 #SPIDER_MIDDLEWARES = {
 #    "graphics_card_scraper.middlewares.GraphicsCardScraperSpiderMiddleware": 543,
 #}
-
+SPIDER_MIDDLEWARES = {
+    'scrapy_splash.SplashDeduplicateArgsMiddleware': 100,
+}
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-   "graphics_card_scraper.middlewares.GraphicsCardScraperDownloaderMiddleware": 543,
-   "graphics_card_scraper.middlewares.IgnoreHttpErrorsMiddleware": 543
+    'scrapy_splash.SplashCookiesMiddleware': 723,
+    'scrapy_splash.SplashMiddleware': 725,
+    'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
+    'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': 400
 }
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
 #EXTENSIONS = {
-#    "scrapy.extensions.telnet.TelnetConsole": None,
+#    'scrapy_splash.SplashDeduplicateArgsMiddleware': 100,
 #}
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-ITEM_PIPELINES = {
-   "graphics_card_scraper.pipelines.GraphicsCardScraperPipeline": 300,
-}
+#ITEM_PIPELINES = {
+ #  "graphics_card_scraper.pipelines.GraphicsCardScraperPipeline": 300,
+#}
 # Disable default FilesPipeline
 FILES_STORE = None
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -93,3 +97,9 @@ FILES_STORE = None
 REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
+SPLASH_URL = 'http://localhost:8050'
+DUPEFILTER_CLASS = 'scrapy_splash.SplashAwareDupeFilter'
+HTTPCACHE_STORAGE = 'scrapy_splash.SplashAwareFSCacheStorage'
+COOKIES_ENABLED = True # Nếu cần dùng Cookie
+SPLASH_COOKIES_DEBUG = False
+DOWNLOAD_DELAY = 10
