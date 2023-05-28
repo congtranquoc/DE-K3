@@ -15,10 +15,29 @@ NEWSPIDER_MODULE = "graphics_card_scraper.spiders"
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = "graphics_card_scraper (+http://www.yourdomain.com)"
+ROBOTSTXT_OBEY = True  # Tuân thủ quy tắc robots.txt của trang web
+CONCURRENT_REQUESTS = 10  # Số lượng yêu cầu đồng thời tối đa
+DOWNLOAD_DELAY = 5  # Độ trễ giữa các yêu cầu (giây)
+AUTOTHROTTLE_ENABLED = True  # Sử dụng AutoThrottle để điều chỉnh tỷ lệ yêu cầu
+AUTOTHROTTLE_START_DELAY = 1  # Độ trễ ban đầu trước khi bắt đầu điều chỉnh tỷ lệ yêu cầu
+AUTOTHROTTLE_MAX_DELAY = 60  # Độ trễ tối đa giữa các yêu cầu
+AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0  # Mức đồng thời mục tiêu (yêu cầu/giây)
+AUTOTHROTTLE_DEBUG = False  # Kích hoạt chế độ debug cho AutoThrottle
 
-# Obey robots.txt rules
-ROBOTSTXT_OBEY = False
+# Cấu hình User-Agent ngẫu nhiên
+USER_AGENT_LIST = [
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36',
+    # Thêm các User-Agent khác tại đây
+]
 
+DOWNLOADER_MIDDLEWARES = {
+    'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
+    'scrapy_useragents.downloadermiddlewares.useragents.UserAgentsMiddleware': 500,
+}
+ITEM_PIPELINES = {
+    'graphics_card_scraper.pipelines.GraphicsCardScraperPipeline': 300,
+}
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
 
@@ -47,17 +66,8 @@ ROBOTSTXT_OBEY = False
 #SPIDER_MIDDLEWARES = {
 #    "graphics_card_scraper.middlewares.GraphicsCardScraperSpiderMiddleware": 543,
 #}
-SPIDER_MIDDLEWARES = {
-    'scrapy_splash.SplashDeduplicateArgsMiddleware': 100,
-}
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-DOWNLOADER_MIDDLEWARES = {
-    'scrapy_splash.SplashCookiesMiddleware': 723,
-    'scrapy_splash.SplashMiddleware': 725,
-    'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
-    'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': 400
-}
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
@@ -95,11 +105,4 @@ FILES_STORE = None
 
 # Set settings whose default value is deprecated to a future-proof value
 REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
-TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
-SPLASH_URL = 'http://localhost:8050'
-DUPEFILTER_CLASS = 'scrapy_splash.SplashAwareDupeFilter'
-HTTPCACHE_STORAGE = 'scrapy_splash.SplashAwareFSCacheStorage'
-COOKIES_ENABLED = True # Nếu cần dùng Cookie
-SPLASH_COOKIES_DEBUG = False
-DOWNLOAD_DELAY = 10

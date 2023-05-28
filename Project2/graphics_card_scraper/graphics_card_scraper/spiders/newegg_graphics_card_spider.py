@@ -1,25 +1,11 @@
 import scrapy
 import re
 import time
-from scrapy_splash import SplashRequest
-from scrapy import signals
-from scrapy.utils.request import request_fingerprint
-
-
 
 class NeweggGraphicsCardSpiderSpider(scrapy.Spider):
     name = "newegg_graphics_card_spider"
     allowed_domains = ["www.newegg.com"]
     start_urls = ["https://www.newegg.com/GPUs-Video-Graphics-Cards/SubCategory/ID-48/Page-{page}?Tid=7709".format(page=i) for i in range(1, 101)]
-    splash_url = 'http://localhost:8050'
-    
-    def start_requests(self):
-        for url in self.start_urls:
-            yield SplashRequest(
-                url,
-                self.parse, 
-                endpoint='render.html', 
-                args={'wait': 10})
                 
     def parse(self, response):
         products = response.css('.item-cell')
